@@ -1,19 +1,49 @@
-# Guia Eleitoral RJ 2026 — GitHub Pages
+# Guia Eleitoral RJ 2026 — V11 Web/PWA
 
-## Publicação recomendada
+Pacote estático pronto para hospedagem por HTTPS (GitHub Pages, Cloudflare Pages, Netlify, Vercel ou servidor web comum).
 
-1. Crie um repositório público no GitHub, por exemplo `guia-eleitoral-rj-2026`.
-2. Extraia este ZIP no computador.
-3. Envie **os arquivos extraídos diretamente para a raiz do repositório**. O arquivo `index.html` precisa aparecer na página inicial do repositório, não dentro de outra pasta.
-4. No repositório: **Settings → Pages**.
-5. Em **Build and deployment → Source**, escolha **Deploy from a branch**.
-6. Escolha **Branch: main** e **Folder: / (root)**.
-7. Clique em **Save**.
-8. Após o deploy, o endereço será normalmente `https://SEU_USUARIO.github.io/guia-eleitoral-rj-2026/`.
+## Arquivos
+- `index.html`: aplicação com a base local embutida.
+- `manifest.webmanifest`: instalação como PWA.
+- `service-worker.js`: cache do aplicativo para abertura resiliente/offline.
+- `icons/`: ícones de instalação, inclusive Apple Touch Icon.
+- `.nojekyll`: facilita publicação direta no GitHub Pages.
 
-## Importante
+## Publicação rápida no GitHub Pages
+1. Crie um repositório.
+2. Envie **o conteúdo desta pasta** para a raiz do repositório.
+3. Em Settings > Pages, escolha Deploy from a branch e selecione a branch principal, pasta `/ (root)`.
+4. Abra a URL HTTPS fornecida pelo GitHub Pages.
 
-- Não envie apenas o ZIP como um arquivo do repositório.
-- Não deixe `index.html` dentro de `guia_eleitoral_rj_github_pages/` ou outra subpasta.
-- O arquivo `.nojekyll` deve permanecer na raiz.
-- Esta versão usa caminhos relativos e funciona tanto em `usuario.github.io/repositorio/` quanto em domínio próprio.
+## iPhone / iPad
+Abra a URL no navegador e use Compartilhar > Adicionar à Tela de Início. A aplicação possui manifesto, Apple Touch Icon e modo standalone.
+
+## Android
+Abra a URL em Chrome/Edge/Samsung Internet. Quando disponível, use “Instalar aplicativo”; a própria página também expõe um botão de instalação quando o navegador oferece o prompt.
+
+## Compartilhamento
+Os filtros são serializados na query string. Exemplo: `?partido=PT&area=Saúde`.
+A ficha individual usa `?candidato=5077-PSOL` e pode ser compartilhada pelo botão “Compartilhar ficha”.
+
+## Observação sobre dados externos
+A base básica permanece embutida no `index.html`. Consultas externas ao TSE e à Câmara são enriquecimento opcional. Se um endpoint bloquear CORS ou estiver indisponível, a aplicação continua abrindo e pesquisando a base local.
+
+
+## V11 — seleção de fichas, áreas e propostas
+- Cada card pode ser selecionado; até 4 fichas podem ser abertas na mesma tela como blocos independentes, sem ranking ou nota.
+- A ficha individual traz uma seção destacada de áreas associadas à trajetória e, quando existente, atuação parlamentar documentada.
+- A seção **Propostas e prioridades declaradas** lê o arquivo `propostas.json`. Só devem ser incluídos itens com fonte primária identificável.
+- Estrutura de `propostas.json`: chave `NUMERO|PARTIDO` (ou SQ_CANDIDATO), com `proposals`, `sources` e `updated`.
+
+Exemplo:
+```json
+{
+  "0000|PARTIDO": {
+    "proposals": [
+      {"title":"Tema", "text":"Descrição factual", "source":"https://fonte-oficial.exemplo"}
+    ],
+    "sources": ["https://fonte-oficial.exemplo"],
+    "updated": "2026-09-29"
+  }
+}
+```
