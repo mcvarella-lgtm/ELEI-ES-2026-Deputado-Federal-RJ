@@ -1,4 +1,4 @@
-# Guia Eleitoral RJ 2026 — V11 Web/PWA
+# Guia Eleitoral RJ 2026 — V12 Web/PWA
 
 Pacote estático pronto para hospedagem por HTTPS (GitHub Pages, Cloudflare Pages, Netlify, Vercel ou servidor web comum).
 
@@ -29,7 +29,7 @@ A ficha individual usa `?candidato=5077-PSOL` e pode ser compartilhada pelo bot�
 A base básica permanece embutida no `index.html`. Consultas externas ao TSE e à Câmara são enriquecimento opcional. Se um endpoint bloquear CORS ou estiver indisponível, a aplicação continua abrindo e pesquisando a base local.
 
 
-## V11 — seleção de fichas, áreas e propostas
+## V12 — seleção de fichas, áreas e propostas
 - Cada card pode ser selecionado; até 4 fichas podem ser abertas na mesma tela como blocos independentes, sem ranking ou nota.
 - A ficha individual traz uma seção destacada de áreas associadas à trajetória e, quando existente, atuação parlamentar documentada.
 - A seção **Propostas e prioridades declaradas** lê o arquivo `propostas.json`. Só devem ser incluídos itens com fonte primária identificável.
@@ -47,3 +47,7 @@ Exemplo:
   }
 }
 ```
+
+
+## V12
+A área completa de busca e filtros é retrátil e inicia recolhida, deixando mais espaço para os cards dos candidatos em telas de celular.

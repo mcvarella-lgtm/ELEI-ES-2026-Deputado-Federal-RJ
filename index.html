@@ -29,10 +29,25 @@ a{color:#145d95}
 .statusbar button{margin-left:auto}
 .method{background:#eef5fb;border:1px solid #cbdceb;border-radius:15px;padding:15px 17px;margin-bottom:14px}
 .method h3{margin:0 0 7px}.method p{margin:5px 0;font-size:13px;line-height:1.48}
-.toolbar{background:#fff;border:1px solid var(--line);border-radius:15px;padding:12px;position:sticky;top:0;z-index:10;box-shadow:0 6px 18px #0e2d4b12}
+.toolbar{background:#fff;border:1px solid var(--line);border-radius:15px;padding:8px 10px;position:sticky;top:0;z-index:10;box-shadow:0 6px 18px #0e2d4b12}
+.toolbar-head{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:42px}
+.toolbar-toggle{display:flex;align-items:center;gap:8px;background:var(--navy);color:#fff;padding:9px 12px}
+.toolbar-toggle .chev{display:inline-block;transition:transform .18s ease}
+.toolbar.open .toolbar-toggle .chev{transform:rotate(180deg)}
+.filter-summary{font-size:12px;color:var(--muted);margin-left:auto;text-align:right}
+.toolbar-body{display:none;border-top:1px solid #e8eef4;margin-top:8px;padding-top:10px}
+.toolbar.open .toolbar-body{display:block}
 .filters{display:grid;grid-template-columns:1.7fr .8fr 1.2fr 1.35fr .95fr auto;gap:8px;align-items:end}
 .more{display:none;grid-template-columns:1.25fr 1.1fr 1.1fr 1.15fr;gap:8px;border-top:1px solid #e9eff5;margin-top:10px;padding-top:10px}
 .more.open{display:grid}
+.collapse-row{margin-top:10px;display:flex;gap:8px;justify-content:space-between;align-items:center}
+.collapse-row .collapse-search{margin-left:auto}
+@media(max-width:560px){
+  .toolbar{padding:7px 8px}
+  .toolbar-head{min-height:38px}
+  .toolbar-toggle{width:auto;max-width:70%;justify-content:flex-start;padding:8px 10px}
+  .filter-summary{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
 label{display:block;font-size:11px;color:var(--muted);font-weight:800;margin-bottom:4px}
 input,select,button{font:inherit}
 input,select{width:100%;padding:10px;border:1px solid #ccd8e4;border-radius:9px;background:#fff;color:var(--ink)}
@@ -77,7 +92,7 @@ footer{margin:24px 0 50px;color:var(--muted);font-size:12px;line-height:1.55}
 <body>
 <section class="hero">
   <h1>ELEIÇÕES 2026 — Deputado Federal · Rio de Janeiro</h1>
-  <p>Guia Web/PWA · busca, filtros, seleção de fichas e informações factuais com rastreabilidade de fonte</p>
+  <p>Guia Web/PWA · busca retrátil, filtros, seleção de fichas e informações factuais com rastreabilidade de fonte</p>
   <div class="hero-actions">
     <button id="shareViewBtn">Compartilhar esta visão</button>
     <button id="installBtn" class="ghost" hidden>Instalar aplicativo</button>
@@ -103,22 +118,36 @@ footer{margin:24px 0 50px;color:var(--muted);font-size:12px;line-height:1.55}
     <p><b>Propostas de campanha:</b> não há, para deputado federal, um campo padronizado obrigatório equivalente a um plano de governo individual no conjunto estruturado de candidaturas. Por isso, a ficha mostra os sites e redes declarados ao TSE quando disponíveis, sem gerar automaticamente uma síntese editorial de propostas.</p>
   </section>
 
-  <section class="toolbar">
-    <div class="filters">
-      <div><label>Buscar por nome ou número</label><input id="q" placeholder="Digite nome ou número"></div>
-      <div><label>Partido</label><select id="party"><option value="">Todos</option></select></div>
-      <div><label>Situação eleitoral</label><select id="status"><option value="">Todas incluídas</option></select></div>
-      <div><label>Área associada à trajetória</label><select id="area"><option value="">Todas</option></select></div>
-      <div><label>Experiência federal</label><select id="camara"><option value="">Todas</option></select></div>
-      <button id="moreBtn" class="soft">Mais filtros</button>
+  <section id="searchToolbar" class="toolbar" aria-label="Busca e filtros">
+    <div class="toolbar-head">
+      <button id="searchToggleBtn" class="toolbar-toggle" type="button" aria-expanded="false" aria-controls="searchToolbarBody">
+        <span aria-hidden="true">🔎</span>
+        <span id="searchToggleText">Buscar e filtrar</span>
+        <span class="chev" aria-hidden="true">▾</span>
+      </button>
+      <span id="filterSummary" class="filter-summary">Nenhum filtro ativo</span>
     </div>
-    <div id="moreFilters" class="more">
-      <div><label>Ocupação declarada</label><select id="occupation"><option value="">Todas</option></select></div>
-      <div><label>Escolaridade</label><select id="schooling"><option value="">Todas</option></select></div>
-      <div><label>Reeleição (campo TSE)</label><select id="reelection"><option value="">Todos</option><option value="Sim">Sim</option><option value="Não">Não</option><option value="Não informado">Não informado</option></select></div>
-      <div><label>Dados estruturados</label><select id="enrich"><option value="">Todos</option><option value="loaded">Carregados</option><option value="pending">Pendentes</option></select></div>
+
+    <div id="searchToolbarBody" class="toolbar-body">
+      <div class="filters">
+        <div><label>Buscar por nome ou número</label><input id="q" placeholder="Digite nome ou número"></div>
+        <div><label>Partido</label><select id="party"><option value="">Todos</option></select></div>
+        <div><label>Situação eleitoral</label><select id="status"><option value="">Todas incluídas</option></select></div>
+        <div><label>Área associada à trajetória</label><select id="area"><option value="">Todas</option></select></div>
+        <div><label>Experiência federal</label><select id="camara"><option value="">Todas</option></select></div>
+        <button id="moreBtn" class="soft">Mais filtros</button>
+      </div>
+      <div id="moreFilters" class="more">
+        <div><label>Ocupação declarada</label><select id="occupation"><option value="">Todas</option></select></div>
+        <div><label>Escolaridade</label><select id="schooling"><option value="">Todas</option></select></div>
+        <div><label>Reeleição (campo TSE)</label><select id="reelection"><option value="">Todos</option><option value="Sim">Sim</option><option value="Não">Não</option><option value="Não informado">Não informado</option></select></div>
+        <div><label>Dados estruturados</label><select id="enrich"><option value="">Todos</option><option value="loaded">Carregados</option><option value="pending">Pendentes</option></select></div>
+      </div>
+      <div class="collapse-row">
+        <button id="clear" class="soft">Limpar filtros</button>
+        <button id="collapseSearchBtn" class="soft collapse-search">Recolher busca</button>
+      </div>
     </div>
-    <div style="margin-top:10px;display:flex;gap:8px"><button id="clear" class="soft">Limpar filtros</button></div>
   </section>
 
   <div class="stats">
@@ -130,7 +159,7 @@ footer{margin:24px 0 50px;color:var(--muted);font-size:12px;line-height:1.55}
   <main id="grid" class="grid"></main>
 
   <footer>
-    <b>Data de construção da V11 Web/PWA:</b> 29/09/2026. A base local preserva o recorte processual validado nas versões anteriores e tenta sincronizar novamente o cadastro do TSE ao abrir. Como decisões da Justiça Eleitoral podem alterar a situação dos registros, consulte a fonte oficial indicada na ficha para confirmação mais recente.
+    <b>Data de construção da V12 Web/PWA:</b> 29/09/2026. A base local preserva o recorte processual validado nas versões anteriores e tenta sincronizar novamente o cadastro do TSE ao abrir. Como decisões da Justiça Eleitoral podem alterar a situação dos registros, consulte a fonte oficial indicada na ficha para confirmação mais recente.
   </footer>
 </div>
 
@@ -762,10 +791,36 @@ window.openProfile=async function(number,party,fromUrl=false){
     </section>`;
 };
 
+
+function activeFilterCount(){
+  return [els.q,els.party,els.status,els.area,els.camara,els.occupation,els.schooling,els.reelection,els.enrich]
+    .filter(el=>el && String(el.value||'').trim()!=='').length;
+}
+function updateFilterSummary(){
+  const n=activeFilterCount();
+  const summary=document.getElementById('filterSummary');
+  if(!summary) return;
+  summary.textContent=n===0?'Nenhum filtro ativo':`${n} filtro${n===1?'':'s'} ativo${n===1?'':'s'}`;
+}
+function setSearchToolbar(open){
+  const bar=document.getElementById('searchToolbar');
+  const btn=document.getElementById('searchToggleBtn');
+  const txt=document.getElementById('searchToggleText');
+  if(!bar||!btn||!txt) return;
+  bar.classList.toggle('open',!!open);
+  btn.setAttribute('aria-expanded',open?'true':'false');
+  txt.textContent=open?'Recolher busca':'Buscar e filtrar';
+  if(open && window.innerWidth<=700){
+    setTimeout(()=>document.getElementById('q')?.focus({preventScroll:true}),80);
+  }
+}
+
 async function boot(){
   refreshSelects();
   applyUrlFilters();
   render();
+  updateFilterSummary();
+  setSearchToolbar(false);
   if(isIOS() && !isStandalone()) document.getElementById('installTip').classList.add('show');
   if('serviceWorker' in navigator && location.protocol!=='file:'){
     try{ await navigator.serviceWorker.register('./service-worker.js'); }catch(e){}
@@ -773,16 +828,23 @@ async function boot(){
   await ensureChamberList();
   await syncData();
   await loadProposals();
-  applyUrlFilters(); render(); updateSelectionBar();
+  applyUrlFilters(); render(); updateFilterSummary(); updateSelectionBar();
   const target=candidateFromUrl();
   if(target) openProfile(target.number,target.party,true);
 }
+document.getElementById('searchToggleBtn').onclick=()=>{
+  const bar=document.getElementById('searchToolbar');
+  setSearchToolbar(!bar.classList.contains('open'));
+};
+document.getElementById('collapseSearchBtn').onclick=()=>setSearchToolbar(false);
 document.getElementById('moreBtn').onclick=()=>document.getElementById('moreFilters').classList.toggle('open');
 document.getElementById('clear').onclick=()=>{
   [els.q,els.party,els.status,els.area,els.camara,els.occupation,els.schooling,els.reelection,els.enrich].forEach(x=>x.value='');
-  render(); syncUrlFromFilters();
+  render(); syncUrlFromFilters(); updateFilterSummary();
 };
-[els.q,els.party,els.status,els.area,els.camara,els.occupation,els.schooling,els.reelection,els.enrich].forEach((el,i)=>el.addEventListener(i===0?'input':'change',()=>{render();syncUrlFromFilters();}));
+[els.q,els.party,els.status,els.area,els.camara,els.occupation,els.schooling,els.reelection,els.enrich].forEach((el,i)=>el.addEventListener(i===0?'input':'change',()=>{
+  render();syncUrlFromFilters();updateFilterSummary();
+}));
 document.getElementById('openSelectionBtn').onclick=openSelectedProfiles;
 document.getElementById('clearSelectionBtn').onclick=()=>{selectedProfiles.clear();render();updateSelectionBar();};
 document.getElementById('reloadData').onclick=syncData;
